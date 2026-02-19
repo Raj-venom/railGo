@@ -1,0 +1,40 @@
+const config = {
+    SERVICE_NAME: require('../../package.json').name,
+    PORT: Number(process.env.PORT) || 4001,
+    NODE_ENV: process.env.NODE_ENV || "development",
+    LOG_LEVEL: process.env.LOG_LEVEL || "info",
+    DATABASE_URL: process.env.DATABASE_URL,
+    REDIS_URL: process.env.REDIS_URL,
+    KAFKA_BROKER: process.env.KAFKA_BROKER,
+    ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS,
+
+    OTP_TTL: process.env.OTP_TTL || 300,
+    OTP_RATE_MAX_PER_HOUR: process.env.OTP_RATE_MAX_PER_HOUR || 5,
+    OTP_MAX_VERIFY_ATTEMPTS: process.env.OTP_MAX_VERIFY_ATTEMPTS || 5,
+    OTP_HMAC_SECRET: process.env.OTP_HMAC_SECRET || "df8b9c8e7a6f5d4c3b2a1e0f9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1",
+
+    JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET || "7gf8b9c8e7a6f5d4c3b2a1e0f9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1",
+    JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || "sfsdf8b9c8e7a6f5d4c3b2a1e0f9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1",
+    ACCESS_TOKEN_EXP: process.env.ACCESS_TOKEN_EXP || "15m",
+    REFRESH_TOKEN_EXP: process.env.REFRESH_TOKEN_EXP || "7d",
+    ACCESS_TOKEN_EXP_SEC: Number(process.env.ACCESS_TOKEN_EXP_SEC || 900),
+    REFRESH_TOKEN_EXP_SEC: Number(process.env.REFRESH_TOKEN_EXP_SEC || 604800),
+    REDIS_USER_TTL: Number(process.env.REDIS_USER_TTL || 86400),
+
+
+    MAIL_SEND: process.env.MAIL_SEND,
+    SENDGRID_API_KEY: process.env.SENDGRID_API_KEY
+}
+
+if (!config.SENDGRID_API_KEY) {
+    throw new Error('SENDGRID_ƒAPI_KEY missing');
+}
+
+if (!config.MAIL_SEND) {
+    throw new Error('MAIL_SEND missing');
+}
+
+
+export {
+    config
+} 
