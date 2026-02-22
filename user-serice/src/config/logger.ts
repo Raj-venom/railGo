@@ -34,6 +34,6 @@ const logger: Logger & {
             }
         }
     } : undefined,
-}) as any; // casting as any temporarily, since pino's types are generic
+}) as any; 
 
 export default logger;
