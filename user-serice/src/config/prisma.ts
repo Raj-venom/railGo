@@ -1,26 +1,21 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../prisma/generated/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { config } from './';
 
-const connectionString = config.DATABASE_URL;
 
-// Ensure singleton in dev to prevent multiple instances (hot reloads)
 declare global {
-  // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
+  var _prisma: PrismaClient | undefined;
 }
 
-let prisma: PrismaClient;
+if (!globalThis._prisma) {
+  const adapter = new PrismaPg({ connectionString: config.DATABASE_URL });
 
-if (!global.prisma) {
-  const adapter = new PrismaPg({ connectionString });
-
-  global.prisma = new PrismaClient({
+  globalThis.prisma = new PrismaClient({
     adapter,
-    log: ['error', 'warn'], // log Prisma errors and warnings
+    log: ['error', 'warn'],
   });
 }
 
-prisma = global.prisma;
+const prisma = globalThis._prisma!;
 
 export default prisma;

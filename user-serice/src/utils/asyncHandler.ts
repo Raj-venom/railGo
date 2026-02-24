@@ -1,15 +1,32 @@
-import type { NextFunction } from "express";
+import type {
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response,
+} from "express";
 
-type AsyncRequestHandler = (
-  req: Request,
-  res: Response,
+type AsyncRequestHandler<
+  P = {},
+  ResBody = any,
+  ReqBody = any,
+  ReqQuery = any,
+> = (
+  req: Request<P, ResBody, ReqBody, ReqQuery>,
+  res: Response<ResBody>,
   next: NextFunction,
 ) => Promise<void>;
 
-const asyncHandler = (requestHandler: AsyncRequestHandler) => {
-  return (req: Request, res: Response, next: NextFunction): void => {
-    Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));
+export const asyncHandler =
+  <
+    P = {},
+    ResBody = any,
+    ReqBody = any,
+    ReqQuery = any,
+  >(
+    fn: AsyncRequestHandler<P, ResBody, ReqBody, ReqQuery>,
+  ): RequestHandler<P, ResBody, ReqBody, ReqQuery> =>
+  (req, res, next) => {
+    Promise
+      .resolve(fn(req, res, next))
+      .catch(next);
   };
-};
-
-export { asyncHandler };
