@@ -101,5 +101,5 @@ class RedisClient {
 
 
 
-export const redis = RedisClient.getInstance();
+export const redisClient = RedisClient.getInstance();
 export { RedisClient };

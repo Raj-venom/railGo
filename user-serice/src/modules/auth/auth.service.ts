@@ -8,7 +8,7 @@ class AuthService {
 
         const existingUser = await prisma.user.findUnique({ where: { email } });
 
-        if(existingUser) {
+        if (existingUser) {
             throw new ConflictError("Email already in use", "EMAIL_ALREADY_IN_USE");
         }
 
@@ -17,14 +17,10 @@ class AuthService {
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
-        const meta = {firstName, lastName, email, hashedPassword};
-     const {otp, otpSessionId} = await generateAndStoreOtp(meta);
+        const meta = { firstName, lastName, email, hashedPassword };
+        const { otp, otpSessionId } = await generateAndStoreOtp(meta);
 
-     return {otpSessionId}
-
-
-
-
+        return { otpSessionId }
 
     };
 }
