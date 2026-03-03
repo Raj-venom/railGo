@@ -1,6 +1,7 @@
 import prisma from "../../config/prisma";
 import { ConflictError } from "../../utils/ApiError";
 import bcrypt from "bcrypt";
+import { createOtpSession } from "../../utils/otpHelper";
 
 class AuthService {
 
@@ -12,16 +13,14 @@ class AuthService {
             throw new ConflictError("Email already in use", "EMAIL_ALREADY_IN_USE");
         }
 
-        if (existingUser) {
-            throw new ConflictError("Email already in use", "EMAIL_ALREADY_IN_USE");
-        }
 
         const hashedPassword = await bcrypt.hash(password, 12);
         const meta = { firstName, lastName, email, hashedPassword };
-        const { otp, otpSessionId } = await generateAndStoreOtp(meta);
+        const { otp, otpSessionId } = await createOtpSession(meta);
 
         return { otpSessionId }
 
     };
 }
 export default AuthService;
+    

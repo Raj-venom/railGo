@@ -5,3 +5,10 @@ export interface SignUpBody {
     password: string;
     confirmPassword: string;
 }
+
+export type OtpSessionMeta = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    hashedPassword: string;
+};
