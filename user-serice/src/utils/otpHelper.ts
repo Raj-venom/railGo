@@ -1,7 +1,7 @@
 import { config } from "../config";
 import { createHmac, randomInt, randomUUID, timingSafeEqual } from "crypto";
 import { redisClient } from "../config/redis";
-import { TooManyRequestsError } from "./ApiError";
+import { BadRequestError, TooManyRequestsError } from "./ApiError";
 import { RedisKeys } from "./constant";
 import { OtpSessionMeta } from "../modules/auth/auth.types";
 
@@ -24,7 +24,7 @@ function hashOtp(email: string, otp: string): string {
     return createHmac("sha256", HMAC_SECRET).update(email + ":" + otp).digest("hex");
 }
 
- async function createOtpSession(meta: OtpSessionMeta): Promise<{ otp: string; otpSessionId: string }> {
+async function createOtpSession(meta: OtpSessionMeta): Promise<{ otp: string; otpSessionId: string }> {
 
     // check rate limit
     // if rate limit exceeded, throw error
@@ -63,11 +63,11 @@ function hashOtp(email: string, otp: string): string {
 
 }
 
- async function verifyOtpSession(otpSessionId: string, otp: string): Promise<OtpSessionMeta> {
+async function verifyOtpSession(otp: string, otpSessionId: string,): Promise<OtpSessionMeta> {
 
     const rawData = await redisClient.get(RedisKeys.otp.session(otpSessionId));
     if (!rawData) {
-        throw new Error("Invalid or expired OTP session");
+        throw new BadRequestError("Invalid or expired OTP session", "INVALID_OTP_SESSION");
     }
 
     const { hashedOtp: storedOtp, meta } = JSON.parse(rawData);
@@ -95,7 +95,8 @@ function hashOtp(email: string, otp: string): string {
     } else {
         await redisClient.incr(attemptsKey);
         await redisClient.expire(attemptsKey, OTP_TTL);
-        return null;
+       
+        throw new BadRequestError("Invalid OTP or expired OTP session", "INVALID_OTP");
     }
 
 

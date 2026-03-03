@@ -1,5 +1,4 @@
 import { config } from "../../config";
-import { BadRequestError } from "../../utils/ApiError";
 import { ApiResponse } from "../../utils/ApiResponse";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { CookieNames } from "../../utils/constant";
@@ -47,6 +46,23 @@ class AuthController {
                 .json(response);
         }
     )
+
+    public verifyOTP = asyncHandler<{}, any, { otp: string, otpSessionId: string }>(
+        async (req, res) => {
+            const { otp } = req.body;
+            const otpSessionId = req.cookies[CookieNames.OTP_SESSION]
+
+            const { user } = await this.authService.verifyOTP({ otp, otpSessionId });
+
+            res.clearCookie(CookieNames.OTP_SESSION);
+
+            return res
+                .status(StatusCodes.OK)
+                .json(new ApiResponse(StatusCodes.OK, user, "User signed up successfully"));
+
+        }
+    )
+
 
 }
 
