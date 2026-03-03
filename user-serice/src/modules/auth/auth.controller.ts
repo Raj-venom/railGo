@@ -1,11 +1,19 @@
 import { config } from "../../config";
 import { BadRequestError } from "../../utils/ApiError";
+import { ApiResponse } from "../../utils/ApiResponse";
 import { asyncHandler } from "../../utils/asyncHandler";
+import { CookieNames } from "../../utils/constant";
 import AuthService from "./auth.service";
+import { StatusCodes } from "http-status-codes";
 
 import { SignUpBody } from "./auth.types";
 
-
+const cookieOptions = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict" as const,
+    maxAge: Number(config.OTP_TTL) * 1000
+}
 
 class AuthController {
 
@@ -27,15 +35,18 @@ class AuthController {
 
     public initiateSignup = asyncHandler<{}, any, SignUpBody>(
         async (req, res) => {
-            const { firstName, lastName, email, password, confirmPassword } = req.body;
+            const { firstName, lastName, email, password } = req.body;
 
             const { otpSessionId } = await this.authService.initiateSignup({ firstName, lastName, email, password });
 
+            const response = new ApiResponse(StatusCodes.OK, null, "User logged in successfully");
 
-
+            return res
+                .status(response.statusCode)
+                .cookie(CookieNames.OTP_SESSION, otpSessionId, cookieOptions)
+                .json(response);
         }
-    );
-
+    )
 
 }
 

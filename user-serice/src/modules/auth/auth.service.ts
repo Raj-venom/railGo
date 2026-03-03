@@ -20,7 +20,10 @@ class AuthService {
 
         return { otpSessionId }
 
-    };
+    }
+
+
+
 }
 export default AuthService;
     

@@ -14,7 +14,7 @@ type AsyncRequestHandler<
   req: Request<P, ResBody, ReqBody, ReqQuery>,
   res: Response<ResBody>,
   next: NextFunction,
-) => Promise<void>;
+) => Promise<void | Response>; 
 
 export const asyncHandler =
   <
