@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { CookieNames } from '../../utils/constant';
 
 export const signUpSchema = {
     body: z.object({
@@ -13,15 +14,30 @@ export const signUpSchema = {
     }),
 };
 
-export const getUserSchema = {
-    params: z.object({
-        id: z.string().uuid('Invalid user ID format'),
+
+export const loginSchema = {
+    body: z.object({
+        email: z.string().email('Invalid email address'),
+        password: z.string().min(8, 'Password must be at least 8 characters'),
     }),
 };
 
-export const listUsersSchema = {
-    query: z.object({
-        page: z.coerce.number().int().positive().default(1),
-        limit: z.coerce.number().int().positive().max(100).default(10),
+
+export const verifyOTPSchema = {
+
+    body: z.object({
+        otp: z.string().min(1, 'OTP is required'),
     }),
+    cookies: z.object({
+        [CookieNames.OTP_SESSION]: z.string().min(1, 'OTP session ID is required in cookies'),
+    })
+}
+
+
+export const rotateRefreshTokenSchema = {
+
+    cookies: z.object({
+        [CookieNames.REFRESH_TOKEN]: z.string().min(1, 'Refresh token is required in cookies'),
+    })
+
 };
