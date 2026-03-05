@@ -1,10 +1,42 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
-import dotenv from "dotenv";
-import { config } from "./config";
+
+import { corsMiddleware } from "./middlewares/cors.middlware";
+import { handleError } from "./middlewares/handleError.middleware";
+import requestLogger from "./middlewares/req.middleware";
+
+
+const app = express();
+
+app.use(helmet());
+app.use(corsMiddleware);
+app.use(requestLogger);
+app.use(express.json());
+app.use(cookieParser());
 
 
 
+// Router import 
+import authRoutes from "./modules/auth/auth.routes";
 
-dotenv.config();
+
+
+//routes declaration
+app.use("/api/v1/auth", authRoutes);
+
+
+app.get("/healthcheck", (req, res) => {
+    res.status(200).json({
+        message: "ok"
+    })
+})
+
+app.use("*splat", (req, res) => {
+    return res.status(404).json({ message: "Resource not found" })
+});
+
+// handle error
+app.use(handleError);
+
+export default app;

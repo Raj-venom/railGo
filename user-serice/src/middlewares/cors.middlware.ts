@@ -3,7 +3,7 @@ import { config } from '../config';
 
 
 const corsMiddleware = cors({
-    origin: config.ALLOWED_ORIGINS.split(','),
+    origin: config.ALLOWED_ORIGINS?.split(',') || [],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [

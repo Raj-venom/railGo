@@ -32,12 +32,12 @@ class RedisClient {
     static setupEventListeners() {
         RedisClient.instance.on('connect', () => {
             RedisClient.isConnected = true;
-            logger.info("Connected to Redis");
+            logger.info("Connected to Redis successfully");
         })
 
         RedisClient.instance.on('error', (error) => {
             RedisClient.isConnected = false;
-            logger.error("Redis connection error", error);
+            logger.error("Redis connection error: " + error.message); 
         })
 
         RedisClient.instance.on('close', () => {

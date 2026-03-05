@@ -1,15 +1,27 @@
-import express from 'express';
+import dotenv from "dotenv";
 
-const app = express();
-const PORT = 3000;
+dotenv.config({
+    path: "./.env"
+})
 
-// Middleware to parse JSON
-app.use(express.json());
+import { config } from "./config";
+import logger from "./config/logger";
+import app from "./app";
 
-// Basic route
-app.get('/', (req, res) => {
-    res.send('Welcome to the RailGo User Service!');
-});
 
-// Start the server
-export default app;
+
+
+
+const startServer = () => {
+    try {
+        app.listen(config.PORT, () => {
+            `⚙️ ${config.SERVICE_NAME} is running on http://localhost:${config.PORT}`
+
+        })
+    } catch (error) {
+        logger.error("Failed to start server", { error });
+        process.exit(1);
+    }
+}
+
+startServer();
