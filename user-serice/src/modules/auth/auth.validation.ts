@@ -41,3 +41,10 @@ export const rotateRefreshTokenSchema = {
     })
 
 };
+
+
+export const googleAuthSchema =  {
+    body: z.object({
+        idToken: z.string().min(1, 'Google token is required'),
+    })
+}

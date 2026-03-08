@@ -23,7 +23,11 @@ const config = {
 
 
     MAIL_SEND: process.env.MAIL_SEND,
-    SENDGRID_API_KEY: process.env.SENDGRID_API_KEY
+    SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+
+
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET
 }
 
 if (!config.SENDGRID_API_KEY) {
@@ -33,6 +37,11 @@ if (!config.SENDGRID_API_KEY) {
 if (!config.MAIL_SEND) {
     throw new Error('MAIL_SEND missing');
 }
+
+if (!config.GOOGLE_CLIENT_ID) {
+    throw new Error("GOOGLE_CLIENT_ID environment variable is required");
+}
+
 
 
 export {

@@ -118,6 +118,26 @@ class AuthController {
         }
     )
 
+    // google login
+    public googleLogin = asyncHandler<{}, any, { idToken: string }>(
+        async (req, res) => {
+            const { idToken } = req.body;
+
+            const deviceId = getDeviceFingerprint(req);
+
+            const { accessToken, loggedInUser, refreshToken } = await this.authService.verifyGoogleIdToken(idToken, deviceId);
+
+
+            return res
+                .status(StatusCodes.OK)
+                .cookie(CookieNames.ACCESS_TOKEN, accessToken, getCookieOptions(config.ACCESS_TOKEN_EXP_SEC))
+                .cookie(CookieNames.REFRESH_TOKEN, refreshToken, getCookieOptions(config.REFRESH_TOKEN_EXP_SEC))
+                .json(new ApiResponse(StatusCodes.OK, { accessToken, refreshToken, user: loggedInUser }, "User logged in successfully"));
+
+
+        }
+    )
+
 
 }
 
