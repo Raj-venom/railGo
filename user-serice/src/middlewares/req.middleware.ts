@@ -23,6 +23,8 @@ const requestMiddleware = (req: Request, res: Response, next: NextFunction) => {
     requestId,
     method: req.method,
     url: req.originalUrl,
+    ip: req.ip,
+    userAgent: req.headers["user-agent"],
   });
 
   req.logger = childLogger;

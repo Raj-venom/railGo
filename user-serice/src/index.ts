@@ -15,9 +15,9 @@ import app from "./app";
 const startServer = () => {
     try {
         app.listen(config.PORT, () => {
-            `⚙️ ${config.SERVICE_NAME} is running on http://localhost:${config.PORT}`
-
+            logger.info(`\n\n⚙️ ${config.SERVICE_NAME} is running on http://localhost:${config.PORT} \n\n`) // ✅
         })
+
     } catch (error) {
         logger.error("Failed to start server", { error });
         process.exit(1);
