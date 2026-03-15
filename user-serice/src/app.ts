@@ -9,7 +9,10 @@ import requestLogger from "./middlewares/req.middleware";
 
 const app = express();
 
-app.use(helmet());
+app.use(helmet({
+    crossOriginOpenerPolicy: false,
+    crossOriginEmbedderPolicy: false,
+}));
 app.use(corsMiddleware);
 app.use(requestLogger);
 app.use(express.json());
