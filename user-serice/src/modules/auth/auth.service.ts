@@ -9,6 +9,8 @@ import { createOtpSession, verifyOtpSession } from "../../utils/otpHelper";
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../../utils/Auth";
 import { redisClient } from "../../config/redis";
 import { config } from "../../config";
+import { notificationProducer } from "../../kafka/producer/notification.producter";
+import logger from "../../config/logger";
 
 
 const client = new OAuth2Client(config.GOOGLE_CLIENT_ID);
@@ -24,10 +26,12 @@ class AuthService {
             throw new ConflictError("Email already in use", "EMAIL_ALREADY_IN_USE");
         }
 
-
         const hashedPassword = await bcrypt.hash(password, 12);
         const meta = { firstName, lastName, email, hashedPassword };
         const { otp, otpSessionId } = await createOtpSession(meta);
+
+        await notificationProducer.sendOtpEmail(email, otp, Number(config.OTP_TTL) / 60);
+        logger.info(`OTP email queued for : ${email}`);
 
         return { otpSessionId }
 
@@ -53,7 +57,9 @@ class AuthService {
             }
         });
 
-        await sendWelcomeEmail(user.email, user.firstName);
+        await notificationProducer.sendWelcomeEmail(user.email, user.firstName);
+        logger.info(`Welcome email queued for : ${user.email}`);
+
         return { user };
 
     }
@@ -87,6 +93,9 @@ class AuthService {
         const { password: _password, ...safeUser } = existingUser;
 
         await redisClient.set(`user:${existingUser.id}`, JSON.stringify(safeUser), 'EX', config.REDIS_USER_TTL);
+
+        // TODO: Send login notification email if new device fingerprint is detected
+
         return { accessToken, refreshToken, loggedInUser: safeUser };
     }
 

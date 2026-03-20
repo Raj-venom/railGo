@@ -12,7 +12,7 @@ const authController = new AuthController();
 
 router.post('/signup/request-otp', validateRequest(signUpSchema), authController.initiateSignup);
 
-// TODO: Check if validateRequest can handle cookies validation
+// FIXME: Check if validateRequest can handle cookies validation
 router.post("/verify-otp", validateRequest(verifyOTPSchema), authController.verifyOTP);
 
 router.post("/login", validateRequest(loginSchema), authController.login);
