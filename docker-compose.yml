@@ -1,4 +1,5 @@
-name: irctc-backend
+name: railgo-backend
+
 
 services:
   # postgres:

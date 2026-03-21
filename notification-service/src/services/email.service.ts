@@ -1,7 +1,7 @@
 import sgMail from "@sendgrid/mail";
 
 import { config } from "../config";
-import logger from "../config/looger";
+import logger from "../config/logger";
 import { getOtpTemplate, getWelcomeTemplate } from "../templates";
 import { MAX_EMAIL_RETRIES } from "../utils/constant";
 
@@ -73,4 +73,4 @@ class EmailService {
 
 }
 
-export default new EmailService();
+export const emailService = new EmailService();

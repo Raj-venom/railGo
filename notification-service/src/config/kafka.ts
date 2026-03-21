@@ -1,5 +1,5 @@
 import { Kafka, logLevel } from "kafkajs";
-import logger from "./looger";
+import logger from "./logger";
 import { config } from ".";
 
 
