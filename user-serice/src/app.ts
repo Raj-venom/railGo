@@ -22,11 +22,14 @@ app.use(cookieParser());
 
 // Router import 
 import authRoutes from "./modules/auth/auth.routes";
+import userRoutes from "./modules/user/user.routes";
 
 
 
 //routes declaration
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/user", userRoutes);
+
 
 
 app.get("/healthcheck", (req, res) => {
