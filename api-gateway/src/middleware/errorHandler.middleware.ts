@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError";
 import { config } from "../config";
 
 
-const handleError = (
+const errorHandler = (
   err: unknown,
   req: Request,
   res: Response,
@@ -49,4 +49,4 @@ const handleError = (
   });
 };
 
-export { handleError };
+export { errorHandler };

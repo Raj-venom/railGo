@@ -10,7 +10,7 @@ declare module "express-serve-static-core" {
   }
 }
 
-const requestMiddleware = (req: Request, res: Response, next: NextFunction) => {
+const requestLogger = (req: Request, res: Response, next: NextFunction) => {
   const startTime = process.hrtime.bigint();
 
   const requestId = randomUUID();
@@ -47,4 +47,4 @@ const requestMiddleware = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export default requestMiddleware;
+export { requestLogger };
