@@ -137,6 +137,16 @@ class ServiceUnavailableError extends ApiError {
   }
 }
 
+class GatewayTimeoutError extends ApiError {
+  constructor(
+    message: string = "Gateway Timeout",
+    code: string = "GATEWAY_TIMEOUT",
+    stack?: string,
+  ) {
+    super(504, message, code, stack);
+  }
+}
+
 export {
   ApiError,
   BadRequestError,
@@ -150,4 +160,5 @@ export {
   InternalServerError,
   NotImplementedError,
   ServiceUnavailableError,
+  GatewayTimeoutError,
 };
