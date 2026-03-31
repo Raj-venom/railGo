@@ -106,6 +106,8 @@ async function forwardRequest(
 ) {
   const url = `${serviceUrl}${path}`;
 
+  // TODO: Add HTTP Keep-Alive
+  // log before and after the request to measure latency and identify bottlenecks
   const requestConfig: {
     method: string;
     url: string;
@@ -200,7 +202,7 @@ async function forwardRequest(
   }
 }
 
-function createProxyHandler(serviceName: string, serviceUrl: string) {
+function createServiceProxy(serviceName: string, serviceUrl: string) {
   const circuitBreaker = circuitBreakerInstances[serviceName];
 
   if (!circuitBreaker) {
@@ -211,10 +213,18 @@ function createProxyHandler(serviceName: string, serviceUrl: string) {
     try {
       logger.info(req.path);
 
+      // Extract path (remove /api prefix only)
+      // Gateway: /api/users/auth/login -> Service: /auth/login
+      // Gateway: /api/users/user/profile -> Service: /user/profile
+
+      logger.info(req.path);
       const pathParts = req.path.split("/").filter(Boolean);
       logger.info(pathParts);
 
-      const servicePath = "/" + pathParts.slice(1).join("/"); // Remove the service name from the path
+      // Remove 'users' (first part), keep the rest
+      // ['users', 'auth', 'login'] -> ['auth', 'login'] -> '/auth/login'
+
+      const servicePath = "/" + pathParts.slice(1).join("/");
       logger.info(servicePath);
 
       const result = await forwardRequest(
@@ -256,6 +266,6 @@ function getCircuitBreakerStatus() {
 export {
   CircuitBreaker,
   circuitBreakerInstances,
-  createProxyHandler,
+  createServiceProxy,
   getCircuitBreakerStatus,
 };
