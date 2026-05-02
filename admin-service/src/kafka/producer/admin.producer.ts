@@ -101,3 +101,6 @@ class AdminProducer {
     );
   }
 }
+
+const adminProducer = new AdminProducer();
+export default adminProducer;

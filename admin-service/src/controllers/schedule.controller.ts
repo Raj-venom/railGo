@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { ApiError, BadRequestError } from "../utils/ApiError";
 import { asyncHandler } from "../utils/asyncHandler";
+import ScheduleService from "../services/schedule.service";
 
 class ScheduleController {
   private scheduleService: any;
