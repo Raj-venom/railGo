@@ -166,3 +166,5 @@ class StationService {
     return station;
   };
 }
+
+export default StationService;
